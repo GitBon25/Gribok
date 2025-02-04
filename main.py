@@ -54,7 +54,7 @@ TILE_MAPPING = {
 }
 
 
-class MapHandler:
+class MapHandler: #обработчик карты
     def __init__(self, map_file):
         self.tiles = []
         self.collision_tiles = []
@@ -64,7 +64,7 @@ class MapHandler:
         self.water_animation_timer = 0
         self.load_map(map_file)
 
-    def load_map(self, map_file):
+    def load_map(self, map_file): #загрузка карты
         with open(map_file, 'r') as f:
             for y, line in enumerate(f):
                 row = []
@@ -90,7 +90,7 @@ class MapHandler:
                         row.append(None)
                 self.tiles.append(row)
 
-    def draw(self, surface, camera):
+    def draw(self, surface, camera): #отрисовка тайлов
         for row in self.tiles:
             for tile in row:
                 if tile:
@@ -106,7 +106,7 @@ class MapHandler:
         for coin in self.coins:
             coin.draw(surface, camera)
 
-    def update_coins(self):
+    def update_coins(self): #отрисовка монет
         for coin in self.coins:
             coin.update()
 
@@ -118,11 +118,11 @@ class MapHandler:
 
 
 
-def get_font(size):
+def get_font(size): #получение шрифта
     return pygame.font.Font("assets/font.ttf", size)
 
 
-def level1():
+def level1(): #первый уровень
     global count, coins_collected, enemy_hits, current_level
     current_level = 1
     count = 0
@@ -181,7 +181,7 @@ def level1():
 
         map_handler.update_coins()
 
-        bg_offset_x = -player.rect.centerx * parallax_factor % bg_width
+        bg_offset_x = -player.rect.centerx * parallax_factor % bg_width #эффект параллакса
         bg_offset_y = -player.rect.centery * parallax_factor % bg_height
 
         SCREEN.blit(bg_level, (bg_offset_x, bg_offset_y))
@@ -207,8 +207,8 @@ def level1():
                 enemy2.draw(SCREEN, camera)
 
         player_rect = player.rect
-        for enemy in enemies:
-            if enemy.is_alive:
+        for enemy in enemies: 
+            if enemy.is_alive: #обработка collide
                 enemy_rect = pygame.Rect(
                     enemy.x, enemy.y, enemy.sprites[0].get_width(), enemy.sprites[0].get_height())
                 if player_rect.colliderect(enemy_rect) and player.velocity_y > 0:
@@ -255,7 +255,7 @@ def level1():
                 show_popup = True
                 popup_start_time = pygame.time.get_ticks()
 
-        if show_popup:
+        if show_popup: #всплывающий текст
             current_time = pygame.time.get_ticks()
             if current_time - popup_start_time < popup_duration:
                 text_surface = get_font(30).render(
@@ -276,7 +276,7 @@ def level1():
             f"Score: {count}", True, (253, 254, 255))
         SCREEN.blit(score_text, (20, 20))
 
-        for event in pygame.event.get():
+        for event in pygame.event.get(): #обработка нажатий
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -293,7 +293,7 @@ def level1():
         clock.tick(FPS)
 
 
-def level2():
+def level2(): #второй уровень
     global count, coins_collected, enemy_hits, current_level
     current_level = 2
     count = 0
@@ -440,7 +440,7 @@ def level2():
         clock.tick(FPS)
 
 
-def play():
+def play(): #меню выбора уровня
     while True:
         pygame.display.set_caption("Play")
         mouse_pos = pygame.mouse.get_pos()
@@ -484,7 +484,7 @@ def play():
         pygame.display.update()
 
 
-def options(return_to_level=None):
+def options(return_to_level=None): #меню настроек
     global SCREEN, fullscreen, disable_music
     checkbox_fullscreen = Button(image=pygame.image.load("assets/Buttons/check.png"),
                                  clicked_image=pygame.image.load(
@@ -576,7 +576,7 @@ def options(return_to_level=None):
         pygame.display.update()
 
 
-def main_menu():
+def main_menu(): #главное меню
     while True:
         pygame.display.set_caption("Menu")
         SCREEN.blit(BG, (0, 0))
@@ -616,7 +616,7 @@ def main_menu():
         pygame.display.update()
 
 
-def defeat():
+def defeat(): #финальный экран при поражении
     global current_level
     lose_sound.play()
     while True:
@@ -666,7 +666,7 @@ def defeat():
         pygame.display.update()
 
 
-def game_over():
+def game_over(): #финальный экран при победе
     global count
     win_sound.play()
     while True:
@@ -713,7 +713,7 @@ def game_over():
         pygame.display.update()
 
 
-def update_game_stats():
+def update_game_stats(): #обновление статистики пройденного уровня
     global count, coins_collected, enemy_hits, current_level
 
     stats = {
@@ -733,7 +733,7 @@ def update_game_stats():
         writer.writerow(stats)
 
 
-def save_game_state(player, enemies, enemies2, coins, map_handler):
+def save_game_state(player, enemies, enemies2, coins, map_handler): #сохранение игры при открытии меню настроек
     state = {
         "player": (player.rect.x, player.rect.y, player.velocity_y, player.is_defeated),
         "enemies": [(enemy.x, enemy.y, enemy.is_alive) for enemy in enemies],
@@ -743,7 +743,7 @@ def save_game_state(player, enemies, enemies2, coins, map_handler):
     return state
 
 
-def restore_game_state(state, player, enemies, enemies2, map_handler):
+def restore_game_state(state, player, enemies, enemies2, map_handler): #загрузка сохранения
     player.rect.x, player.rect.y, player.velocity_y, player.is_defeated = state["player"]
     for i, enemy in enumerate(enemies):
         enemy.x, enemy.y, enemy.is_alive = state["enemies"][i]
@@ -753,4 +753,4 @@ def restore_game_state(state, player, enemies, enemies2, map_handler):
         coin.x, coin.y, coin.collected = state["coins"][i]
 
 
-main_menu()
+main_menu() #запуск игры с основного меню
