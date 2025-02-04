@@ -1,7 +1,4 @@
-import pygame
-import csv
-import os
-import sys
+import pygame, csv, os, sys
 from classes.button import Button
 from classes.character import Character
 from classes.enemy import Enemy
