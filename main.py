@@ -17,8 +17,8 @@ FPS = 60
 BG = pygame.image.load("assets/Backgrounds/Background.jpg")
 button_sound = pygame.mixer.Sound("assets/Sounds/button.wav")
 button_sound.set_volume(0.1)
-loose_sound = pygame.mixer.Sound("assets/Sounds/loose.wav")
-loose_sound.set_volume(0.3)
+lose_sound = pygame.mixer.Sound("assets/Sounds/lose.wav")
+lose_sound.set_volume(0.3)
 win_sound = pygame.mixer.Sound("assets/Sounds/win.wav")
 win_sound.set_volume(0.3)
 background_music = pygame.mixer.Sound("assets/Sounds/background.wav")
@@ -618,7 +618,7 @@ def main_menu():
 
 def defeat():
     global current_level
-    loose_sound.play()
+    lose_sound.play()
     while True:
         pygame.display.set_caption("Defeat")
 
